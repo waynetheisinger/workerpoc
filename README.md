@@ -16,12 +16,51 @@ This repository contains a proof of concept for a Node.js application that handl
    npm install
    ```
 
-3. Ensure Redis is installed and running as it's required by the `bull` queuing package.
+3. Ensure Redis is installed and running as it's required by the `bull` queuing package. 
 
 4. Start the server:
    ```bash
    node app.js
    ```
+Certainly! Here's the section for your `README.md`:
+
+---
+
+## Redis Dependency
+
+In our solution, we've introduced Redis as a backend for the message queue using the Bull library. Redis, a fast in-memory data structure store, offers persistence and can be used as a database, cache, or message broker. For our use-case, it functions as a message broker, enabling us to efficiently manage and process jobs in the background, ensuring the main event loop is non-blocking.
+
+**Why Redis?**
+- **Performance**: Redis's in-memory nature ensures fast read and write operations.
+- **Persistence**: While being in-memory, Redis offers mechanisms to persist data on disk without compromising much on performance.
+- **Atomic Operations**: Redis supports atomic operations on complex data types, ensuring data integrity.
+- **Pub/Sub Capabilities**: Redis supports Publish/Subscribe (Pub/Sub) patterns, which are beneficial for real-time messaging.
+- **Widespread Support**: Being one of the popular choices for in-memory stores, there's a lot of community support, tools, and libraries (like Bull) available.
+
+### Installing and Running Redis using Docker
+
+**Why Docker?**  
+Docker enables developers to easily deploy applications inside containers, ensuring software will run the same regardless of where it's deployed. For our case, it allows us to run Redis without going through a complex setup process, and without interfering with other software that might be running on the developer's machine.
+
+1. **Install Docker**:  
+   To run Redis in a container, you first need to have Docker installed:
+   - [Install Docker](https://docs.docker.com/get-docker/)
+
+2. **Install Docker Compose**:  
+   Docker Compose is a tool for defining and running multi-container Docker applications. In our setup, we are using it to manage the Redis container.
+   - [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+3. **Running Redis**:  
+   With Docker and Docker Compose installed, navigate to the project's root directory in your terminal and run:
+   ```bash
+   docker-compose up
+   ```
+
+This command will pull the Redis image (if not already pulled) and start a Redis instance. Your Node.js application will then be able to connect to this Redis instance as it processes jobs in the background.
+
+---
+
+Feel free to edit or restructure the information to better fit the overall structure and style of your `README.md`.
 ## Producing the test data
 A quick and efficient way to generate a CSV with random numbers is to use a scripting language like Node.js itself. In the repository root is a simple script `generateCSV.js` that will generate a CSV file filled with random numbers suitable for our prime processing function:
 
