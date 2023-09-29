@@ -88,11 +88,7 @@ This command will pull the Redis image (if not already pulled) and start a Redis
    ```bash
    node app.js
    ```
-Certainly! Here's the section for your `README.md`:
-
 ---
-
-Feel free to edit or restructure the information to better fit the overall structure and style of your `README.md`.
 ## Producing the test data
 A quick and efficient way to generate a CSV with random numbers is to use a scripting language like Node.js itself. In the repository root is a simple script `generateCSV.js` that will generate a CSV file filled with random numbers suitable for our prime processing function:
 
