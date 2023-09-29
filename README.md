@@ -7,8 +7,8 @@ This repository contains a proof of concept for a Node.js application that handl
 
 1. Clone the repository:
    ```bash
-   git clone [REPOSITORY_URL]
-   cd [REPOSITORY_DIRECTORY]
+   git clone git@github.com:waynetheisinger/workerpoc.git
+   cd workerpoc
    ```
 
 2. Install the required packages:
@@ -52,6 +52,3 @@ The actual processing (simulated CPU-bound task) is offloaded to a worker thread
 ## Feedback & Contribution
 
 Your insights and feedback are invaluable. Please feel free to raise issues or submit pull requests for improvements.
-```
-
-Replace `[REPOSITORY_URL]` and `[REPOSITORY_DIRECTORY]` with the appropriate URL and directory name for your repository.
