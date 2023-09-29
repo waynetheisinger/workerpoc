@@ -22,6 +22,20 @@ This repository contains a proof of concept for a Node.js application that handl
    ```bash
    node app.js
    ```
+## Producing the test data
+A quick and efficient way to generate a CSV with random numbers is to use a scripting language like Node.js itself. In the repository root is a simple script `generateCSV.js` that will generate a CSV file filled with random numbers suitable for our prime processing function:
+
+When you run this script using Node.js, it will produce a file called `randomData.csv` with 10,000 rows, and each row contains 10 random numbers between 1 and 1,000,000.
+
+You can adjust the `numRows`, `numbersPerRow`, and `maxNumber` variables as needed to create a CSV of the desired size and complexity.
+
+Just run it with Node:
+
+```
+node generateCSV.js
+```
+
+After running the script, you should have the `randomData.csv` file ready for testing with your application.
 
 ## Testing Using Postman
 
@@ -48,6 +62,14 @@ To test the file upload endpoint using Postman:
 When a file is uploaded, it gets saved temporarily and is added to a processing queue. The `bull` package handles the queuing mechanism, ensuring that even if multiple files are uploaded simultaneously, they're processed in an orderly manner.
 
 The actual processing (simulated CPU-bound task) is offloaded to a worker thread, ensuring the main event loop is never blocked.
+
+## Testing Event Loop Status
+
+To demonstrate that the event loop isn't blocked during file processing:
+
+1. **Using Postman or Browser**: 
+   - After sending a CSV file for processing, immediately access the endpoint `http://localhost:3000/status`.
+   - You should promptly receive a response: "Event loop is not blocked". This indicates that the event loop remains free even as the application processes CPU-bound tasks in the background.
 
 ## Feedback & Contribution
 
