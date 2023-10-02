@@ -83,10 +83,10 @@ processingQueue.process(os.cpus().length, (job) => {
         const worker = new Worker('./worker.js', { workerData: job.data.fileData });
 
         // Listen for messages from the worker thread. This can be the result or any other messages.
-        worker.on('message', resolve);
-
-        // Handle any errors from the worker thread.
-        worker.on('error', reject);
+        worker.on('message', (message) => {
+          console.log(message);  // Log the message from the worker
+          resolve();
+        });
 
         // Handle the exit event of the worker. If the exit wasn't graceful, reject the promise.
         worker.on('exit', (code) => {
