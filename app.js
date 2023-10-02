@@ -33,6 +33,7 @@ const fileUpload = require('express-fileupload'); // Middleware for handling `mu
 const { Worker } = require('worker_threads'); // Node.js native module for spawning worker threads.
 const Queue = require('bull'); // Job and message queue based on Redis.
 const os = require('os'); // Node.js native module to access OS-specific properties and methods.
+const { exit } = require('process');
 
 const app = express(); // Initialize an Express application.
 
@@ -43,17 +44,27 @@ app.use(fileUpload());
 // Here, the Redis instance is running locally on the default port 6379.
 const processingQueue = new Queue('file-processing', 'redis://127.0.0.1:6379');
 
+// Clear the queue every time the application starts (for development purposes)
+async function clearQueue() {
+  await processingQueue.empty();
+  await processingQueue.clean(0, 'completed');
+  await processingQueue.clean(0, 'failed');
+  console.log("Queue cleared");
+}
+clearQueue();
+
 // Define the endpoint for file uploads. This is the main endpoint where files will be POSTed for processing.
 app.post('/upload', (req, res) => {
+
     // Check if there are any uploaded files.
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
 
-    let sampleFile = req.files.sampleFile; // Access the uploaded file. You can choose a custom field name other than 'sampleFile'.
+    let sampleFileContent = req.files.sampleFile.data.toString('utf8'); // Access the uploaded file. You can choose a custom field name other than 'sampleFile'.
 
     // Add the file data to our processing queue. This offloads the heavy processing from the main thread.
-    processingQueue.add({ fileData: sampleFile.data });
+    processingQueue.add({ fileData: sampleFileContent });
 
     // Send a response to the client indicating that the file is being processed.
     res.send('File uploaded and processing started!');

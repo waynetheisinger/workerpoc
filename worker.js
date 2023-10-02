@@ -18,6 +18,7 @@ const csv = require('csv-parser');
  * from a source. In this case, we're going to use it to read our CSV data.
  */
 const { Readable } = require('stream');
+const e = require('express');
 
 /**
  * A simple function to check if a number is prime.
@@ -34,14 +35,17 @@ function isPrime(num) {
  * mimic some complex processing on each row.
  */
 function processRow(row) {
-    // Simulated CPU-intensive task to introduce a delay
-    for (let i = 0; i < 1e7; i++) {} 
+  // Assuming that the row is an object where the keys are the column headers
+  // and the values are the values for those columns in that row, 
+  // let's process each value.
 
-    // Here we check if the 'someNumericField' from our CSV is a prime number.
-    // More complex processing logic can be added here if necessary.
-    if (isPrime(row.someNumericField)) {
-        // Add more complex processing here if necessary
-    }
+  for (const columnValue of Object.values(row)) {
+      const number = parseInt(columnValue, 10);
+      
+      if (isPrime(number)) {
+          console.log(`Number ${number} is prime!`);
+      }
+  }
 }
 
 /**
@@ -49,9 +53,10 @@ function processRow(row) {
  * Then we pipe this stream through the csv-parser to process each row.
  * After all rows are processed, we send a message back to the parent thread.
  */
-const stream = Readable.from(workerData.toString());
+const stream = Readable.from(workerData);
 stream.pipe(csv())
     .on('data', (row) => {
+        console.log(row);
         processRow(row);
     })
     .on('end', () => {
