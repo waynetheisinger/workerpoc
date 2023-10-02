@@ -30,20 +30,26 @@ function isPrime(num) {
     return num > 1;
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /**
  * Function to process each row of the CSV. It includes a simulated delay to 
  * mimic some complex processing on each row.
  */
-function processRow(row) {
-  // Assuming that the row is an object where the keys are the column headers
-  // and the values are the values for those columns in that row, 
-  // let's process each value.
-
+async function processRow(row) {
   for (const columnValue of Object.values(row)) {
       const number = parseInt(columnValue, 10);
       
-      if (isPrime(number)) {
-          console.log(`Number ${number} is prime!`);
+      let startTime = Date.now();
+      const duration = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+      while (Date.now() - startTime < duration) {
+          if (isPrime(number)) {
+              console.log(`Number ${number} is prime!`);
+          }
+          await sleep(1000); // Pause for 1 second
       }
   }
 }
@@ -59,6 +65,11 @@ stream.pipe(csv())
         console.log(row);
         processRow(row);
     })
+    .on('error', (error) => {
+      console.error('Error while processing CSV:', error);
+      parentPort.postMessage('Error during processing.');
+    })
     .on('end', () => {
-        parentPort.postMessage('Processing complete');
+      console.log('Worker finished processing.');
+      parentPort.postMessage('Processing complete');
     });
