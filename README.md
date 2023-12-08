@@ -46,7 +46,11 @@ In our solution, we've introduced Redis as a backend for the message queue using
 - **Pub/Sub Capabilities**: Redis supports Publish/Subscribe (Pub/Sub) patterns, which are beneficial for real-time messaging.
 - **Widespread Support**: Being one of the popular choices for in-memory stores, there's a lot of community support, tools, and libraries (like Bull) available.
 
-### Installing and Running Redis using Docker
+### Using a remote redis
+By default the POC will use the connection details for redis that you can add to the .env file in the root of the project.
+
+### Or Installing and Running Redis using Docker
+Alternatively comment lines 47 to 59 in `app.js` and uncomment line 62.
 
 **Why Docker?**  
 Docker enables developers to easily deploy applications inside containers, ensuring software will run the same regardless of where it's deployed. For our case, it allows us to run Redis without going through a complex setup process, and without interfering with other software that might be running on the developer's machine.
@@ -66,6 +70,7 @@ Docker enables developers to easily deploy applications inside containers, ensur
    ```
 
 This command will pull the Redis image (if not already pulled) and start a Redis instance. Your Node.js application will then be able to connect to this Redis instance as it processes jobs in the background.
+
 
 ---
 

@@ -28,6 +28,7 @@
  */
 
 // Import necessary modules.
+require('dotenv').config();
 const express = require('express'); // Express is a minimal and flexible Node.js web application framework.
 const fileUpload = require('express-fileupload'); // Middleware for handling `multipart/form-data` (file uploads).
 const { Worker } = require('worker_threads'); // Node.js native module for spawning worker threads.
@@ -40,9 +41,25 @@ const app = express(); // Initialize an Express application.
 // Use express-fileupload middleware to handle file uploads. This allows files to be attached to the req object.
 app.use(fileUpload());
 
-// Initialize the job queue named 'file-processing' using Redis as the storage backend.
-// Here, the Redis instance is running locally on the default port 6379.
-const processingQueue = new Queue('file-processing', 'redis://127.0.0.1:6379');
+// Here we are using a remote Redis configured with TLS and authentication.
+// The connection details are stored in the .env file.
+// comment out if you want to use the local Redis instance and uncomment the next line.
+const redisConfig = {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+    username: process.env.REDIS_USERNAME,
+    tls: {
+      rejectUnauthorized: false
+    }
+  }
+};
+
+const processingQueue = new Queue('file-processing', redisConfig);
+
+// Here, the Redis instance is running locally on the default port 6379 (without authentication).
+//const processingQueue = new Queue('file-processing', 'redis://127.0.0.1:6379');
 
 // Clear the queue every time the application starts (for development purposes)
 async function clearQueue() {
